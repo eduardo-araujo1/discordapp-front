@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -9,5 +10,14 @@ import { RouterLink } from '@angular/router';
   styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent {
+  private readonly dstRef = inject(DestroyRef)
+  private readonly auth = inject(AuthService)
 
+  logout(): void {
+    console.log("token excluido");
+  }
+
+  isUserAuthorized(): boolean {
+    return this.auth.isUserAuthorized();
+  }
 }

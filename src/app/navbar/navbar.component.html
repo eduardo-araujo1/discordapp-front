@@ -5,7 +5,17 @@
     </li>
     <li><a [routerLink]="['/servers']">Servidores</a></li>
     <li><a [routerLink]="['/create-server']">Criar servidor</a></li>
-    <li><a [routerLink]="['/login']">Login</a></li>
+    <li>
+      @if (!isUserAuthorized()) {
+        <a [routerLink]="['/login']">Login</a>
+      }
+    </li>
+
+    <li>
+      @if (isUserAuthorized()) {
+        <button (click)="logout()" type="button">Logout</button>
+      }
+    </li>
   </ul>
 
 </nav>

@@ -42,3 +42,22 @@ nav ul li a:hover {
   border-radius: 15px;
 }
 
+nav button {
+  padding: 10px 20px;
+  background: #fff;
+  color: #003366;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-weight: 600;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+
+nav button:hover {
+  background-color: #003366;
+  color: #fff;
+}
+

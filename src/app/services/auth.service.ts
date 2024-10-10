@@ -7,9 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  logout() {
-    throw new Error('Method not implemented.');
-  }
+  
   private apiUrl = 'http://localhost:8080/auth';
   constructor(private http: HttpClient) { }
 
@@ -31,10 +29,22 @@ export class AuthService {
     const token = this.getAuthorizationToken()
     const isAuthorized = !!token
     console.log('User is authorized:', isAuthorized)
-    if (isAuthorized) {
-      console.log('Token:', token)
-    }
     return isAuthorized
+  }
+
+  getUserId(): string | null {
+    const token = this.getAuthorizationToken();
+    if (!token) return null;
+
+    const payload = token.split('.')[1];
+    const decodedPayload = atob(payload);
+    const payloadData = JSON.parse(decodedPayload);
+
+    return payloadData.userId;
+  }
+
+  logout() {
+    window.localStorage.removeItem('token');
   }
    
 }

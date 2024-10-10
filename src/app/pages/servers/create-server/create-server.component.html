@@ -1,0 +1,14 @@
+<form [formGroup]="serverForm" (ngSubmit)="onSubmit()">
+  <div>
+    <label for="serverName">Nome do Servidor:</label>
+    <input id="serverName" type="text" formControlName="serverName">
+    <div *ngIf="serverForm.get('serverName')?.errors?.['required'] && serverForm.get('serverName')?.touched">
+      Nome do servidor é obrigatório.
+    </div>
+    <div *ngIf="serverForm.get('serverName')?.errors?.['minlength'] || serverForm.get('serverName')?.errors?.['maxlength']">
+      O nome do servidor deve ter entre 5 e 40 caracteres.
+    </div>
+  </div>
+  <button type="submit" [disabled]="!serverForm.valid">Registrar Servidor</button>
+</form>
+<div *ngIf="responseMessage">{{ responseMessage }}</div>

@@ -1,1 +1,31 @@
-<p>servers works!</p>
+<div class="servers-container">
+  <h2>Servidores</h2>
+  
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+  
+  <div *ngIf="servers.length === 0 && !errorMessage" class="no-servers">
+    <p>Você ainda não tem servidores. Crie um novo servidor para começar!</p>
+  </div>
+  
+  <div class="server-grid">
+    <div *ngFor="let server of servers" class="server-card">
+      <h3>
+        <a [routerLink]="['/servers', server.id]">{{ server.serverName }}</a>
+      </h3>
+      <p class="created-at">Criado em: {{ server.createdAt | date:'short' }}</p>
+      <div class="channels">
+        <h4>Canais:</h4>
+        <ul *ngIf="server.channels.length > 0; else noChannels">
+          <li *ngFor="let channel of server.channels">
+            {{ channel.name }}
+          </li>
+        </ul>
+        <ng-template #noChannels>
+          <p>Nenhum canal criado ainda.</p>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

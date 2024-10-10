@@ -1,0 +1,23 @@
+<div>
+  <h2>Detalhes do Servidor</h2>
+  <div *ngIf="server">
+    <h3>{{ server.serverName }}</h3>
+    
+    <h4>Canais</h4>
+    <ul>
+      <li *ngFor="let channel of server.channels">
+        <a [routerLink]="['/servers', server.id, 'channels', channel.id]">{{ channel.name }}</a>
+      </li>
+    </ul>
+
+    <h4>Crial novo Canal</h4>
+    
+    <input [(ngModel)]="newChannelName" placeholder="Nome do novo canal" />
+    <button (click)="createChannel()">Criar Canal</button>
+    <div *ngIf="errorMessage">{{ errorMessage }}</div>
+  </div>
+</div>
+
+
+
+

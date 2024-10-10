@@ -4,7 +4,7 @@
       <a [routerLink]="['/']">Home</a>
     </li>
     <li><a [routerLink]="['/servers']">Servidores</a></li>
-    <li><a [routerLink]="['/create-server']">Criar servidor</a></li>
+    <li><a [routerLink]="['/servers/create']">Criar servidor</a></li>
     <li>
       @if (!isUserAuthorized()) {
         <a [routerLink]="['/login']">Login</a>

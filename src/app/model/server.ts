@@ -1,3 +1,5 @@
+import { ChannelResponseDTO } from "./channel";
+
 export interface ServerRequestDTO {
   serverName: string;
   userId: string;
@@ -6,6 +8,6 @@ export interface ServerRequestDTO {
 export interface ServerResponseDTO {
   id: string;
   serverName: string;
-  channels: any[];
+  channels: ChannelResponseDTO[];
   createdAt: string;
 }

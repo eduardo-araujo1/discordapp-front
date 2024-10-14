@@ -11,3 +11,4 @@ export const SERVER_ROUTES: Routes = [
   { path: ':id', component: ServerDetailsComponent, canActivate: [AuthGuardService] },
   { path: ':id/channels/:channelId', component: ChannelComponent, canActivate: [AuthGuardService] },
 ];
+

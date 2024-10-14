@@ -1,5 +1,5 @@
 export interface Channel {
-  channelId: string; 
+  channelId: string;
   name: string;
 }
 

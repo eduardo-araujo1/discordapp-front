@@ -28,7 +28,6 @@ export class AuthService {
    isUserAuthorized() {
     const token = this.getAuthorizationToken()
     const isAuthorized = !!token
-    console.log('User is authorized:', isAuthorized)
     return isAuthorized
   }
 

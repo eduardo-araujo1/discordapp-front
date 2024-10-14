@@ -6,6 +6,9 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 
+
+(window as any).global = window;
+
 export const appConfig: ApplicationConfig = {
   providers:
    [provideZoneChangeDetection({ eventCoalescing: true }),

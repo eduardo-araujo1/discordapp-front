@@ -12,8 +12,8 @@ export class ChannelService {
 
   constructor(private http: HttpClient) {}
 
-  createChannel(serverId: string, channelRequest: ChannelRequestDTO): Observable<Channel> {
-    return this.http.post<Channel>(`${this.baseUrl}/${serverId}/channels`, channelRequest);
+  createChannel(serverId: string, channelRequest: ChannelRequestDTO): Observable<ChannelResponseDTO> {
+    return this.http.post<ChannelResponseDTO>(`${this.baseUrl}/${serverId}/channels`, channelRequest);
   }
 
   findChannelsByServerId(serverId: string): Observable<ChannelResponseDTO[]> {

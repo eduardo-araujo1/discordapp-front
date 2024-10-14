@@ -5,8 +5,8 @@
     
     <h4>Canais</h4>
     <ul>
-      <li *ngFor="let channel of server.channels">
-        <a [routerLink]="['/servers', server.id, 'channels', channel.id]">{{ channel.name }}</a>
+      <li *ngFor="let channel of server?.channels">
+        <a [routerLink]="['/servers', server.id, 'channels', channel.channelId]">{{ channel.name }}</a>
       </li>
     </ul>
 

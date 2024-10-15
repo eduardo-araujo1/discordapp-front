@@ -12,16 +12,13 @@ import { HttpClient } from '@angular/common/http';
 export class MessagesService {
   public client: Client;
   private messageSubject: BehaviorSubject<MessageDTO[]> = new BehaviorSubject<MessageDTO[]>([]);
-  messages$ = this.messageSubject.asObservable(); // Corrigido de messagesSource para messageSubject
+  messages$ = this.messageSubject.asObservable();
 
   constructor(private http: HttpClient) {
     this.client = new Client({
       webSocketFactory: () => new SockJS('http://localhost:8080/ws') as any,
       onConnect: (frame) => {
         console.log('Connected to WebSocket', frame);
-        // Aqui você pode chamar a função de assinatura, caso tenha os IDs disponíveis
-        // Por exemplo:
-        // this.subscribeToChannel(serverId, channelId);
       },
       onStompError: (frame) => {
         console.error('Broker reported error: ' + frame.headers['message']);
@@ -34,26 +31,26 @@ export class MessagesService {
     console.log('Attempting to connect to WebSocket');
     this.client.activate();
 
-    // Mova a chamada para subscribeToChannel aqui, caso tenha serverId e channelId
     this.client.onConnect = (frame) => {
       console.log('Connected to WebSocket', frame);
-      this.subscribeToChannel(serverId, channelId); // Assine após a conexão
+      this.subscribeToChannel(serverId, channelId);
     };
   }
 
   disconnect(): void {
-    console.log('Disconnecting from WebSocket');
     this.client.deactivate();
+    this.messageSubject.next([]);
   }
 
   subscribeToChannel(serverId: string, channelId: string): void {
     const topicUrl = `/topic/servers/${serverId}/channels/${channelId}`;
     console.log(`Subscribing to channel: ${topicUrl}`);
     
+    this.messageSubject.next([]);
+    
     this.client.subscribe(topicUrl, (message) => {
       console.log('Received message:', message.body);
       const messageContent = JSON.parse(message.body) as MessageDTO;
-      // Verifique se o timestamp está presente
       console.log('Parsed Message:', messageContent);
     
       const currentMessages = this.messageSubject.getValue();
@@ -73,7 +70,6 @@ export class MessagesService {
       .subscribe({
         next: (response) => {
           console.log('Mensagem enviada com sucesso:', response);
-          // Não adiciona a mensagem manualmente, pois o WebSocket cuidará disso
         },
         error: (err) => {
           console.error('Erro ao enviar mensagem:', err);

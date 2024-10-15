@@ -42,10 +42,12 @@ export class ChannelComponent {
       this.serverId = params.get('id'); 
       this.channelId = params.get('channelId');
       this.userId = this.authService.getUserId();
-    
-    
+      
       if (this.serverId && this.channelId) {
+        this.messages = [];
+        
         this.loadChannel(this.serverId, this.channelId);
+        
         this.initWebSocketConnection(this.serverId, this.channelId);
       } else {
         console.error('Erro ao capturar o serverId ou channelId.', {
@@ -53,13 +55,6 @@ export class ChannelComponent {
           channelId: this.channelId
         });
       }
-    });
-  
-    this.messagesSubscription = this.messagesService.getMessages().subscribe({
-      next: (messages: MessageDTO[]) => {
-        this.messages = messages;
-      },
-      error: (err) => this.toastr.error('Erro ao receber mensagens:', err)
     });
   }
 
@@ -73,7 +68,20 @@ export class ChannelComponent {
   }
 
   initWebSocketConnection(serverId: string, channelId: string) {
+    this.messagesService.disconnect();
+    
     this.messagesService.connect(serverId, channelId);
+    
+    if (this.messagesSubscription) {
+      this.messagesSubscription.unsubscribe();
+    }
+    
+    this.messagesSubscription = this.messagesService.getMessages().subscribe({
+      next: (messages: MessageDTO[]) => {
+        this.messages = messages;
+      },
+      error: (err) => this.toastr.error('Erro ao receber mensagens:', err)
+    });
   }
 
   ngOnDestroy() {

@@ -79,9 +79,9 @@ export class ServerDetailsComponent {
 
       this.channelService.createChannel(serverId, channelRequest).subscribe({
         next: (newChannel: ChannelResponseDTO) => {
-          console.log('Novo canal criado:', newChannel);  
           this.server?.channels.push(newChannel);
           this.toastr.success(`Canal "${newChannel.name}" criado com sucesso!`);
+          this.channelForm.reset();
         },
         error: (err) => {
           this.toastr.error('Erro ao criar o canal: ' + err.message);

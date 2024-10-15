@@ -1,21 +1,44 @@
-<div>
-  <h2>Detalhes do Servidor</h2>
-  <div *ngIf="server">
-    <h3>{{ server.serverName }}</h3>
-    
-    <h4>Canais</h4>
-    <ul>
-      <li *ngFor="let channel of server?.channels">
-        <a [routerLink]="['/servers', server.id, 'channels', channel.channelId]">{{ channel.name }}</a>
-      </li>
-    </ul>
+<div class="server-details-container">
+  <mat-card>
+    <mat-card-content>
+      <div class="server-details-content">
+        @if (server) {
+          <h2>{{ server.serverName }}</h2>
+          <h3>Canais</h3>
+          <mat-list>
+            @for (channel of server.channels; track channel.channelId) {
+              <mat-list-item>
+                <mat-icon matListItemIcon>tag</mat-icon>
+                <a matListItemTitle [routerLink]="['/servers', server.id, 'channels', channel.channelId]">
+                  {{ channel.name }}
+                </a>
+              </mat-list-item>
+            }
+          </mat-list>
 
-    <h4>Crial novo Canal</h4>
-    
-    <input [(ngModel)]="newChannelName" placeholder="Nome do novo canal" />
-    <button (click)="createChannel()">Criar Canal</button>
-    <div *ngIf="errorMessage">{{ errorMessage }}</div>
-  </div>
+          <h3>Criar novo Canal</h3>
+          <form [formGroup]="channelForm" (ngSubmit)="createChannel()" class="channel-form">
+            <mat-form-field>
+              <mat-label>Nome do novo canal</mat-label>
+              <input matInput formControlName="newChannelName">
+              @if (channelForm.get('newChannelName')?.hasError('required')) {
+                <mat-error>O nome do canal é obrigatório.</mat-error>
+              }
+              @if (channelForm.get('newChannelName')?.hasError('minlength')) {
+                <mat-error>O nome do canal deve ter pelo menos 2 caracteres.</mat-error>
+              }
+            </mat-form-field>
+            <button mat-raised-button color="primary" type="submit" [disabled]="channelForm.invalid" class="button-form">
+              Criar Canal
+            </button>
+          </form>
+          @if (errorMessage) {
+            <mat-error>{{ errorMessage }}</mat-error>
+          }
+        }
+      </div>
+    </mat-card-content>
+  </mat-card>
 </div>
 
 

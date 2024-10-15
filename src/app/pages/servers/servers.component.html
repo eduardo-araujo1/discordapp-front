@@ -1,31 +1,39 @@
 <div class="servers-container">
-  <h2>Servidores</h2>
+  <h2 class="page-title">Servidores</h2>
   
-  <div *ngIf="errorMessage" class="error-message">
-    {{ errorMessage }}
-  </div>
+  @if (errorMessage) {
+    <mat-card class="message-card error-message">
+      <mat-card-content>
+        <mat-icon>error</mat-icon>
+        {{ errorMessage }}
+      </mat-card-content>
+    </mat-card>
+  }
   
-  <div *ngIf="servers.length === 0 && !errorMessage" class="no-servers">
-    <p>Você ainda não tem servidores. Crie um novo servidor para começar!</p>
-  </div>
+  @if (servers.length === 0 && !errorMessage) {
+    <mat-card class="message-card no-servers">
+      <mat-card-content>
+        <mat-icon>info</mat-icon>
+        <p>Você ainda não tem servidores. Crie um novo servidor para começar!</p>
+      </mat-card-content>
+    </mat-card>
+  }
   
   <div class="server-grid">
-    <div *ngFor="let server of servers" class="server-card">
-      <h3>
-        <a [routerLink]="['/servers', server.id]">{{ server.serverName }}</a>
-      </h3>
-      <p class="created-at">Criado em: {{ server.createdAt | date:'short' }}</p>
-      <div class="channels">
-        <h4>Canais:</h4>
-        <ul *ngIf="server.channels.length > 0; else noChannels">
-          <li *ngFor="let channel of server.channels">
-            {{ channel.name }}
-          </li>
-        </ul>
-        <ng-template #noChannels>
-          <p>Nenhum canal criado ainda.</p>
-        </ng-template>
-      </div>
-    </div>
+    @for (server of servers; track server.id) {
+      <mat-card class="server-card">
+        <mat-card-header>
+          <mat-card-title>
+            <a [routerLink]="['/servers', server.id]">{{ server.serverName }}</a>
+          </mat-card-title>
+          <mat-card-subtitle>Criado em: {{ server.createdAt |  date:'dd/MM/yyyy' }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-actions>
+          <button mat-button color="primary" [routerLink]="['/servers', server.id]" class="custom-button">
+            Entrar
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    }
   </div>
 </div>

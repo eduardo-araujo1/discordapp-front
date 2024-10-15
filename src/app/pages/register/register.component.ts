@@ -21,9 +21,9 @@ export class RegisterComponent {
 
   constructor() {
     this.registerForm = this.fb.group({
-      name: ['', Validators.required],
+      username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
+      password: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(20)]]
     });
   }
 
@@ -35,8 +35,7 @@ export class RegisterComponent {
 
     this.authService.register(this.registerForm.value).subscribe({
       next: () => {
-        console.log('Registro bem-sucedido');
-        this.router.navigate(['/checkout']);
+        this.router.navigate(['/login']);
       },
       error: (error) => {
         console.error('Erro no registro', error);

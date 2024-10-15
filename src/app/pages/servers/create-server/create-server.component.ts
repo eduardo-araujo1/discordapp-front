@@ -2,12 +2,18 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ServerService } from '../../../services/server.service';
 import { AuthService } from '../../../services/auth.service';
-import { NgIf } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import {MatInputModule} from '@angular/material/input'
+
 
 @Component({
   selector: 'app-create-server',
   standalone: true,
-  imports: [ReactiveFormsModule, NgIf],
+  imports: [
+    ReactiveFormsModule,
+    MatInputModule,
+    MatButtonModule
+  ],
   templateUrl: './create-server.component.html',
   styleUrl: './create-server.component.scss'
 })

@@ -1,18 +1,20 @@
-<h1>Funcionando</h1>
-
-
-
-<div class="messages-container">
-  <div *ngFor="let message of messages" class="message">
-    <p>{{ message.content }}</p>
-    <span>Author: {{ message.authorName }}</span>
-    <span *ngIf="message.timestamp">{{ message.timestamp | date:'dd/MM/yyyy, HH:mm' }}</span>
+<div class="chat-container">
+  <div class="messages-container">
+    @for (message of messages; track message) {
+      <div class="message">
+        <span class="author">{{ message.authorName }}</span>
+        @if (message.timestamp) {
+          <span class="timestamp">{{ message.timestamp | date:'dd/MM/yyyy, HH:mm' }}</span>
+        }
+        <p>{{ message.content }}</p>
+      </div>
+    }
+  </div>
+  <div class="message-input">
+    <input [(ngModel)]="newMessage" placeholder="Digite sua mensagem" (keyup.enter)="sendMessage()"/>
+    <button (click)="sendMessage()">Enviar</button>
   </div>
 </div>
 
-<div class="message-input">
-  <input [(ngModel)]="newMessage" placeholder="Digite sua mensagem" (keyup.enter)="sendMessage()"/>
-  <button (click)="sendMessage()">Enviar</button>
-</div>
 
 

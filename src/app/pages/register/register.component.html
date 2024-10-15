@@ -2,9 +2,9 @@
   <h2>Registre-se</h2>
   <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
     <div class="form-group">
-      <label for="name">Nome</label>
-      <input id="name" formControlName="name" type="text" placeholder="Seu nome completo">
-      @if (registerForm.get('name')?.touched && registerForm.get('name')?.invalid) {
+      <label for="username">Nome</label>
+      <input id="username" formControlName="username" type="text" placeholder="Seu nome completo">
+      @if (registerForm.get('username')?.touched && registerForm.get('username')?.invalid) {
         <div class="error-message">
           Nome é obrigatório
         </div>

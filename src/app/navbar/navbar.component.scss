@@ -1,10 +1,19 @@
-
-
 *{
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Montserrat', sans-serif;;
+  font-family: 'Montserrat', sans-serif;
+}
+
+#menu-bar {
+  display: none; 
+}
+
+header label {
+  font-size: 20px;
+  color: #000;
+  cursor: pointer;
+  display: none;       
 }
 
 nav {
@@ -61,3 +70,24 @@ nav button:hover {
   color: #fff;
 }
 
+@media (max-width: 765px) {
+  header label {
+    display: block;
+    font-weight: bold;
+    font-size: 24px;
+  }
+
+  nav ul {
+    display: none;
+    flex-direction: column;
+  }
+
+  #menu-bar:checked + label + nav ul {
+    display: flex;
+  }
+
+  nav ul li {
+    display: block;
+    margin: 10px 0;
+  }
+}

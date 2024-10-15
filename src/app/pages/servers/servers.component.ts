@@ -6,6 +6,7 @@ import { RouterLink } from '@angular/router';
 import {MatCardModule} from '@angular/material/card';
 import {MatListModule} from '@angular/material/list'
 import {MatIconModule} from '@angular/material/icon';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-servers',
@@ -18,7 +19,10 @@ export class ServersComponent {
   servers: ServerResponseDTO[] = [];
   errorMessage: string = '';
 
-  constructor(private serverService: ServerService) { }
+  constructor(
+    private serverService: ServerService,
+    private toastr: ToastrService 
+  ) { }
 
   ngOnInit() {
     this.loadServers();
@@ -30,7 +34,7 @@ export class ServersComponent {
         this.servers = data;
       },
       error: (error) => {
-        this.errorMessage = 'Erro ao carregar os servidores: ' + error.message;
+        this.toastr.error('Erro ao carregar os servidores');
       }
     });
   }

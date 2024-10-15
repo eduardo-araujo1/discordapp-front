@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import {MatListModule} from '@angular/material/list'
 import {MatIconModule} from '@angular/material/icon';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-server-details',
@@ -28,9 +29,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 })
 export class ServerDetailsComponent {
 
-
   server: ServerResponseDTO | null = null;
-  errorMessage: string = '';
   newChannelName: string = '';
   channelId: string | null = null;
   channelForm: FormGroup;
@@ -38,36 +37,35 @@ export class ServerDetailsComponent {
   constructor(
     private route: ActivatedRoute,
     private serverService: ServerService,
-    private channelService: ChannelService
+    private channelService: ChannelService,
+    private toastr: ToastrService
   ) {
     this.channelForm = new FormGroup({
       newChannelName: new FormControl('', [Validators.required, Validators.minLength(2)])
     });
   }
 
-     ngOnInit() {
-      this.route.paramMap.subscribe((params) => {
-        const serverId = params.get('id'); 
-        if (serverId) {
-          this.loadServer(serverId);
-        }
-      });
-    }
+  ngOnInit() {
+    this.route.paramMap.subscribe((params) => {
+      const serverId = params.get('id'); 
+      if (serverId) {
+        this.loadServer(serverId);
+      }
+    });
+  }
+
   loadServer(id: string) {
     this.serverService.findById(id).subscribe({
       next: (data) => {
         this.server = data;
       },
       error: (error) => {
-        this.errorMessage = 'Erro ao carregar o servidor: ' + error.message;
+        this.toastr.error('Erro ao carregar o servidor: ' + error.message);
       }
     });
   }
 
-
   createChannel(): void {
-    this.errorMessage = '';
-
     if (this.channelForm.valid) {
       const channelRequest: ChannelRequestDTO = {
         name: this.channelForm.value.newChannelName 
@@ -75,7 +73,7 @@ export class ServerDetailsComponent {
 
       const serverId = this.server?.id;
       if (!serverId) {
-        this.errorMessage = 'ID do servidor não está disponível.';
+        this.toastr.error('ID do servidor não está disponível.');
         return;
       }
 
@@ -83,14 +81,12 @@ export class ServerDetailsComponent {
         next: (newChannel: ChannelResponseDTO) => {
           console.log('Novo canal criado:', newChannel);  
           this.server?.channels.push(newChannel);
-          this.channelForm.reset();
+          this.toastr.success(`Canal "${newChannel.name}" criado com sucesso!`);
         },
         error: (err) => {
-          this.errorMessage = 'Erro ao criar o canal: ' + err.message;
-          console.error(err);
+          this.toastr.error('Erro ao criar o canal: ' + err.message);
         }
       });
     }
   }
-  
 }

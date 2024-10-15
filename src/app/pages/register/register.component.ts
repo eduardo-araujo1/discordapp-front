@@ -3,6 +3,7 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Router, RouterLink } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -18,6 +19,7 @@ export class RegisterComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
   private fb = inject(FormBuilder);
+  private toastr = inject(ToastrService);
 
   constructor() {
     this.registerForm = this.fb.group({
@@ -36,9 +38,15 @@ export class RegisterComponent {
     this.authService.register(this.registerForm.value).subscribe({
       next: () => {
         this.router.navigate(['/login']);
+        this.toastr.success('Registro realizado com sucesso');
       },
       error: (error) => {
-        console.error('Erro no registro', error);
+        if(error.status === 409) {
+          const errorMessage = error.error.message;
+          this.toastr.error(errorMessage || 'Este email já tem um cadastro');
+        }else {
+          this.toastr.error('Erro no registro', error);
+        }
       }
     });
   }

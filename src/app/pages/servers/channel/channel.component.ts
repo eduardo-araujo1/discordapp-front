@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
 import { MessagesService } from '../../../services/messages.service';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
-
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -33,7 +33,8 @@ export class ChannelComponent {
     private route: ActivatedRoute,
     private channelService: ChannelService,
     private messagesService: MessagesService,
-    private authService: AuthService
+    private authService: AuthService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit() {
@@ -42,9 +43,6 @@ export class ChannelComponent {
       this.channelId = params.get('channelId');
       this.userId = this.authService.getUserId();
     
-      console.log('Server ID:', this.serverId);
-      console.log('Channel ID:', this.channelId);
-      console.log('User ID:', this.userId);
     
       if (this.serverId && this.channelId) {
         this.loadChannel(this.serverId, this.channelId);
@@ -59,11 +57,9 @@ export class ChannelComponent {
   
     this.messagesSubscription = this.messagesService.getMessages().subscribe({
       next: (messages: MessageDTO[]) => {
-        console.log('Novas mensagens recebidas:', messages);
         this.messages = messages;
-        console.log('Mensagens atualizadas no componente:', this.messages);
       },
-      error: (err) => console.error('Erro ao receber mensagens:', err)
+      error: (err) => this.toastr.error('Erro ao receber mensagens:', err)
     });
   }
 
@@ -72,12 +68,11 @@ export class ChannelComponent {
       next: (data) => {
         this.channel = data;
       },
-      error: (err) => console.error('Erro ao carregar o canal:', err)
+      error: (err) => this.toastr.error('Erro ao carregar o canal:', err)
     });
   }
 
   initWebSocketConnection(serverId: string, channelId: string) {
-    console.log('Iniciando conexão WebSocket');
     this.messagesService.connect(serverId, channelId);
   }
 
@@ -94,10 +89,9 @@ export class ChannelComponent {
       const chatMessage: MessageDTO = {
         content: this.newMessage,
         authorId: this.userId,
-        authorName: this.username, // Se você quiser incluir o nome do autor
-        timestamp: new Date().toISOString()  // Adicionando timestamp
+        authorName: this.username,
+        timestamp: new Date().toISOString()
       };
-      console.log('Sending message:', chatMessage);
       this.messagesService.sendMessage(this.serverId, this.channelId, chatMessage);
       this.newMessage = '';
     } else {

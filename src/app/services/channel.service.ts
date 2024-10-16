@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Channel, ChannelRequestDTO, ChannelResponseDTO } from '../model/channel';
 import { Observable } from 'rxjs';
+import { MessageDTO } from '../model/message';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,10 @@ export class ChannelService {
 
   createChannel(serverId: string, channelRequest: ChannelRequestDTO): Observable<ChannelResponseDTO> {
     return this.http.post<ChannelResponseDTO>(`${this.baseUrl}/${serverId}/channels`, channelRequest);
+  }
+
+  getMessages(serverId: string, channelId: string): Observable<MessageDTO[]> {
+    return this.http.get<MessageDTO[]>(`${this.baseUrl}/${serverId}/channels/${channelId}/messages`);
   }
 
   findChannelsByServerId(serverId: string): Observable<ChannelResponseDTO[]> {

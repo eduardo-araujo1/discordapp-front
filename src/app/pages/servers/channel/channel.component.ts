@@ -46,9 +46,19 @@ export class ChannelComponent {
       if (this.serverId && this.channelId) {
         this.messages = [];
         
+        this.channelService.getMessages(this.serverId, this.channelId).subscribe({
+          next: (messages) => {
+            this.messages = messages;
+          },
+          error: (error) => {
+            console.error('Erro ao carregar mensagens antigas:', error);
+          }       
+        });
+        
         this.loadChannel(this.serverId, this.channelId);
         
         this.initWebSocketConnection(this.serverId, this.channelId);
+        
       } else {
         console.error('Erro ao capturar o serverId ou channelId.', {
           serverId: this.serverId,
@@ -78,7 +88,11 @@ export class ChannelComponent {
     
     this.messagesSubscription = this.messagesService.getMessages().subscribe({
       next: (messages: MessageDTO[]) => {
-        this.messages = messages;
+        messages.forEach((message) => {
+          if (!this.messages.some(existingMessage => existingMessage.id === message.id)) {
+            this.messages.push(message);
+          }
+        });
       },
       error: (err) => this.toastr.error('Erro ao receber mensagens:', err)
     });

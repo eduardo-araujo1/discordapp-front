@@ -3,7 +3,6 @@ import { Client, Stomp } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { MessageDTO } from '../model/message';
-import { HttpClient } from '@angular/common/http';
 
 
 @Injectable({
@@ -14,7 +13,7 @@ export class MessagesService {
   private messageSubject: BehaviorSubject<MessageDTO[]> = new BehaviorSubject<MessageDTO[]>([]);
   messages$ = this.messageSubject.asObservable();
 
-  constructor(private http: HttpClient) {
+  constructor() {
     this.client = new Client({
       webSocketFactory: () => new SockJS('http://localhost:8080/ws') as any,
       onConnect: (frame) => {
@@ -28,7 +27,6 @@ export class MessagesService {
   }
 
   connect(serverId: string, channelId: string): void {
-    console.log('Attempting to connect to WebSocket');
     this.client.activate();
 
     this.client.onConnect = (frame) => {
@@ -65,22 +63,18 @@ export class MessagesService {
       console.error('Parâmetros inválidos para enviar mensagem.');
       return;
     }
-  
-    this.http.post<MessageDTO>(`http://localhost:8080/servers/${serverId}/channels/${channelId}/messages`, message)
-      .subscribe({
-        next: (response) => {
-          console.log('Mensagem enviada com sucesso:', response);
-        },
-        error: (err) => {
-          console.error('Erro ao enviar mensagem:', err);
-        }
+
+    const destination = `/app/servers/${serverId}/channels/${channelId}/messages`;
+    
+    if (this.client.connected) {
+      this.client.publish({
+        destination: destination,
+        body: JSON.stringify(message)
       });
-  }
-  addMessage(message: MessageDTO): void {
-    const currentMessages = this.messageSubject.getValue();
-    const updatedMessages = [...currentMessages, message];
-    console.log('Mensagens atualizadas:', updatedMessages);
-    this.messageSubject.next(updatedMessages);
+      console.log('Mensagem enviada via WebSocket:', message);
+    } else {
+      console.error('WebSocket não está conectado');
+    }
   }
 
   getMessages(): Observable<MessageDTO[]> {

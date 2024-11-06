@@ -2,8 +2,9 @@ import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } fr
 import { provideRouter } from '@angular/router';
 import { ToastrModule } from 'ngx-toastr';
 import { routes } from './app.routes';
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { AuthInterceptorService } from './services/auth.interceptor.service';
 
 
 (window as any).global = window;
@@ -13,12 +14,14 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideAnimations(),
-    provideHttpClient(withFetch()),
+    provideHttpClient(
+      withFetch(),
+      withInterceptors([AuthInterceptorService])),
     importProvidersFrom(
       ToastrModule.forRoot({
-        timeOut: 3000, // Tempo de exibição
-        positionClass: 'toast-top-right', // Posição do Toastr
-        preventDuplicates: true, // Previne duplicação de toasts
+        timeOut: 3000,
+        positionClass: 'toast-top-right',
+        preventDuplicates: true,
       })
     ),
   ],

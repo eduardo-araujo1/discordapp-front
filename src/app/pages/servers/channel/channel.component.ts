@@ -114,6 +114,7 @@ export class ChannelComponent {
         authorName: this.username,
         timestamp: new Date().toISOString()
       };
+      
       this.messagesService.sendMessage(this.serverId, this.channelId, chatMessage);
       this.newMessage = '';
     } else {

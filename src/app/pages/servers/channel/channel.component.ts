@@ -27,7 +27,7 @@ export class ChannelComponent {
   username: string | null = null;
   messages: MessageDTO[] = [];
   newMessage: string = '';
-  private messagesSubscription: Subscription | undefined;
+  private messagesSubscription: Subscription | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -39,28 +39,27 @@ export class ChannelComponent {
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
-      this.serverId = params.get('id'); 
+      this.serverId = params.get('id');
       this.channelId = params.get('channelId');
       this.userId = this.authService.getUserId();
-      
+
       if (this.serverId && this.channelId) {
         this.messages = [];
-        
         this.channelService.getMessages(this.serverId, this.channelId).subscribe({
           next: (messages) => {
             this.messages = messages;
           },
           error: (error) => {
-            console.error('Erro ao carregar mensagens antigas:', error);
+            console.error('Error loading past messages:', error);
+            this.toastr.error('Erro ao carregar mensagens antigas');
           }       
         });
-        
+
         this.loadChannel(this.serverId, this.channelId);
-        
+
         this.initWebSocketConnection(this.serverId, this.channelId);
-        
       } else {
-        console.error('Erro ao capturar o serverId ou channelId.', {
+        console.error('Missing serverId or channelId', {
           serverId: this.serverId,
           channelId: this.channelId
         });
@@ -73,13 +72,12 @@ export class ChannelComponent {
       next: (data) => {
         this.channel = data;
       },
-      error: (err) => this.toastr.error('Erro ao carregar o canal:', err)
+      error: (err) => this.toastr.error('Erro ao carregar o canal. Detalhes: ' + (err.message || err))
     });
   }
 
   initWebSocketConnection(serverId: string, channelId: string) {
     this.messagesService.disconnect();
-    
     this.messagesService.connect(serverId, channelId);
     
     if (this.messagesSubscription) {
@@ -87,23 +85,17 @@ export class ChannelComponent {
     }
     
     this.messagesSubscription = this.messagesService.getMessages().subscribe({
-      next: (messages: MessageDTO[]) => {
-        messages.forEach((message) => {
-          if (!this.messages.some(existingMessage => existingMessage.id === message.id)) {
-            this.messages.push(message);
-          }
-        });
-      },
+      next: (messages: MessageDTO[]) => this.addUniqueMessages(messages),
       error: (err) => this.toastr.error('Erro ao receber mensagens:', err)
     });
   }
 
-  ngOnDestroy() {
-    console.log('ChannelComponent being destroyed');
-    if (this.messagesSubscription) {
-      this.messagesSubscription.unsubscribe();
-    }
-    this.messagesService.disconnect();
+  private addUniqueMessages(newMessages: MessageDTO[]) {
+    newMessages.forEach((message) => {
+      if (!this.messages.some(existingMessage => existingMessage.id === message.id)) {
+        this.messages.push(message);
+      }
+    });
   }
 
   sendMessage() {
@@ -125,5 +117,13 @@ export class ChannelComponent {
         userId: this.userId
       });
     }
+  }
+
+  ngOnDestroy() {
+    if (this.messagesSubscription) {
+      this.messagesSubscription.unsubscribe();
+      this.messagesSubscription = null;
+    }
+    this.messagesService.disconnect();
   }
 }

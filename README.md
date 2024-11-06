@@ -1,27 +1,44 @@
 # DiscappFront
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.7.
+Um aplicativo de mensagens inspirado no Discord, permitindo a criação de servidores e canais de chat para mensagens em tempo real.
 
-## Development server
+## Versão Angular
+**18.2.7.**
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Como Rodar o projeto
 
-## Code scaffolding
+### Pré-requisitos
+- Node.js instalado
+- npm (Node Package Manager)
+- Git instalado
+- Angular CLI instalado (caso não tenha, instale com o comando abaixo):
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+   ```bash
+   npm install -g @angular/cli
 
-## Build
+### Passos para Execução
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+1. **Clone o repositório:**
 
-## Running unit tests
+   ```bash
+   git clone https://github.com/seu-usuario/DiscappFront.git
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+2. **Navegue até o diretório do projeto:**
+     ```bash
+     cd DiscappFront
 
-## Running end-to-end tests
+3. **Instale as dependências:**
+    ```bash
+    npm install
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+4. **Inicie o servidor de desenvolvimento:**
+    ```bash
+    ng serve
 
-## Further help
+5. **Acesse o projeto no navegador:**
+  - Abra seu navegador e vá para http://localhost:4200 para visualizar o aplicativo em execução.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+## API do Backend
+
+O backend necessário para este projeto pode ser encontrado neste [repositório](https://github.com/eduardo-araujo1/discordapp).

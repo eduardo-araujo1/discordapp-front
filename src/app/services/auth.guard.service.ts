@@ -1,15 +1,23 @@
-import { inject } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from './auth.service';
 
 
-export const AuthGuardService = () => {
+@Injectable({
+  providedIn: 'root',
+})
+export class AuthGuardService {
 
-  const router = inject(Router);
-  const authService = inject(AuthService);
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
-  if (authService.getAuthorizationToken()) {
-    return true;
+  canActivate(): boolean {
+    if (this.authService.getAuthorizationToken()) {
+      return true;
+    }
+    this.router.navigate(['/login']);
+    return false;
   }
-  return router.parseUrl('/login');
 }

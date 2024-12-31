@@ -42,18 +42,14 @@ export class MessagesService {
 
   subscribeToChannel(serverId: string, channelId: string): void {
     const topicUrl = `/topic/servers/${serverId}/channels/${channelId}`;
-    console.log(`Subscribing to channel: ${topicUrl}`);
     
     this.messageSubject.next([]);
     
     this.client.subscribe(topicUrl, (message) => {
-      console.log('Received message:', message.body);
       const messageContent = JSON.parse(message.body) as MessageDTO;
-      console.log('Parsed Message:', messageContent);
-    
+      
       const currentMessages = this.messageSubject.getValue();
       const updatedMessages = [...currentMessages, messageContent];
-      console.log('Updated messages:', updatedMessages);
       this.messageSubject.next(updatedMessages);
     });
   }

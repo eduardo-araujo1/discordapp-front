@@ -17,7 +17,6 @@ export class NavbarComponent {
   logout(): void {
     this.auth.logout();
     this.router.navigate(['/']); 
-    console.log("token excluído");
   }
   isUserAuthorized(): boolean {
     return this.auth.isUserAuthorized();

@@ -46,7 +46,7 @@ export class CreateServerComponent {
       this.serverService.registerServer(serverName).subscribe({
         next: (response) => {
           this.toastr.success(`Servidor "${response.serverName}" criado com sucesso.`);
-          this.serverForm.reset();
+          this.serverForm.reset({serverName: ''});
           this.router.navigate(['/servers']);
         },
         error: (error) => {
